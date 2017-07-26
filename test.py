@@ -5,41 +5,33 @@ correct_c1c2_dataset = []
 
 for instance in dataset:
     correct = 0
+    # First Filter, Instance in the correct format, nr of elements is the same for both
 
-    # First Filter
-    # Instance in the correct format, nr of elements is the same for both
     instance_labels = instance.keys()
-    #instance_values = instance.values()
     if len(instance_labels) == 8:
-        # PASS
-        # Second Filter
-        # c1 and c2 in the correct format
-        for item in instance:
-            if item == 'c1' and instance[item].find('::bn') !=-1 :
-                #print item, instance[item]
-                correct +=1
-            if item  == 'c2' and instance[item].find('::bn') != -1 :
-                #print item, instance[item]
-                correct +=1
+        # Second Filter, c1 and c2 in the correct format
+        if instance['c1'].find('::bn') != -1:
+            correct +=1
+        if instance['c2'].find('::bn') != -1:
+            correct +=1
+
     if correct == 2:
         correct_c1c2_dataset.append(instance)
 
-#correct_c1c2_dataset
+# Third Filter, Context has c1 & c2
+
 correct_context_dataset = []
 for element in correct_c1c2_dataset:
-    context = str()
-    c1 = str()
-    c2 = str()
-    for item in element:
-        if item == 'context':
-            context = element[item]
-        if item  == 'c1':
-            word,babelnet = element[item].split('::')
-            c1 = word
-        if item == 'c2':
-            word,babelnet = element[item].split('::')
-            c2 = word
-    if c1 in context and c2 in context:
+    context = element['context']
+    phrase_c1, babelnetID_c1 = element['c1'].split('::')
+    phrase_c2, babelnetID_c2 = element['c2'].split('::')
+    if phrase_c1 in context and phrase_c2 in context:
         correct_context_dataset.append(element)
 
-print len(correct_context_dataset)
+
+
+for data in correct_c1c2_dataset:
+    print data['context']
+
+
+#print len(correct_context_dataset)
